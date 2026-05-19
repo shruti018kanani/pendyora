@@ -141,7 +141,7 @@ const HeaderMobileView = ({
             </div>
             <div className="w-[45%]">
               <Link href="/" className="h-[40px] lg:w-full flex justify-center items-center " onClick={reloadPage}>
-                <Image src="/images/ashclair.svg" alt="Ashclair Logo" preview={false} className="object-contain w-[50%] h-[100%] " />
+                <Image src="/images/logo.png" alt="Ashclair Logo" preview={false} className="object-contain w-[50%] h-[100%] " />
               </Link>
             </div>
             <div className="flex w-[30%] justify-end  gap-[9px] items-center ">

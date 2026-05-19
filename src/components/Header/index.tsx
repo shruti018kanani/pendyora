@@ -2,7 +2,7 @@
 
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -33,6 +33,7 @@ let currentValue: string;
 const Header: React.FC<HeaderProps> = ({ className, headerMetaData, promoStripData }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const headerRef = useRef<HTMLElement>(null);
   const { user } = useAppSelector((state) => state.auth.auth);
   const [isFocused, setIsFocused] = useState(false);
   const [currency, setCurrency] = useState<any>('');
@@ -104,6 +105,20 @@ const Header: React.FC<HeaderProps> = ({ className, headerMetaData, promoStripDa
       setOfferModelOpen(subscribeOffer || 'false');
     }
   };
+
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) {
+      return;
+    }
+    const updateHeight = () => {
+      document.documentElement.style.setProperty('--header-height', `${el.offsetHeight}px`);
+    };
+    updateHeight();
+    const ro = new ResizeObserver(updateHeight);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
     dispatch(fetchMasterData());
@@ -184,11 +199,11 @@ const Header: React.FC<HeaderProps> = ({ className, headerMetaData, promoStripDa
   };
 
   return (
-    <header className={`${className} flex flex-col shadow z-[51]`}>
+    <header ref={headerRef} className={`${className} flex flex-col z-[51] lg:border-none overflow-x-clip overflow-y-visible`}>
       <PromotionalStrip data={promoStripData} />
 
       <div className="flex flex-col items-center gap-2 lg:gap-0 self-stretch sm:hidden">
-        <div className="container-xs 2xl:px-[160px] xl:px-28 lg:px-20 md:px-5">
+        <div className="w-full">
           <HeaderTopPart
             isFocused={isFocused}
             handleFocus={handleFocus}
@@ -202,13 +217,14 @@ const Header: React.FC<HeaderProps> = ({ className, headerMetaData, promoStripDa
             value={value}
             setRefresh={setRefresh}
             searchLoading={searchLoading}
+            headerMetaData={headerMetaData}
           />
         </div>
-        <div className="flex justify-center self-stretch bg-text_w pt-[14px] border-b 2xl:px-[80px] xl:px-28 lg:px-20 md:px-5">
+        {/* <div className="flex justify-center self-stretch bg-text_w pt-[14px] border-b 2xl:px-[80px] xl:px-28 lg:px-20 md:px-5">
           <div className="container-xs flex justify-center">
             <HeaderViewDynamic headerData={headerMetaData} />
           </div>
-        </div>
+        </div> */}
       </div>
       <HeaderMobileView
         header={headerClass}

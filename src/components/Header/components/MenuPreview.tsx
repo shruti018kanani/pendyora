@@ -3,7 +3,6 @@ import React from 'react';
 
 import { Image } from 'antd';
 import { useRouter } from 'next/navigation';
-import { GoArrowUpRight } from 'react-icons/go';
 
 import { Text } from '@/components/Text';
 import { useAppSelector } from '@/store';
@@ -19,7 +18,7 @@ const MenuPreview = ({ Details, setActiveMenu }: any) => {
   // console.log(Details);
 
   return (
-    <div className="flex flex-row cursor-default bg-white absolute w-full z-[9999px] px-12 lg:px-0 shadow-md border  items-start pt-[5px] pb-[5px]">
+    <div className="flex flex-row cursor-default bg-white w-full z-[9999px] px-12 lg:px-0 shadow-md border items-start pt-[5px] pb-[5px]">
       <div className="w-full flex flex-row justify-between  p-5 gap-5 ">
         <div className="grid grid-cols-4 w-[calc(100%-270px)]">
           {menuColumnList?.map((item: any, index: number) => {
@@ -32,7 +31,7 @@ const MenuPreview = ({ Details, setActiveMenu }: any) => {
                   {Details?.[item]?.map((item: any, i: number) => (
                     <div key={i} className="flex flex-col gap-2">
                       <div
-                        className={`${item?.link ? 'cursor-pointer hover:text-[#256030]' : ''} uppercase font-semibold text-[13px] lg:text-[11px] md:text-[10px] flex items-center gap-0.5`}
+                        className={`${item?.link ? 'cursor-pointer hover:text-[#256030] hover:underline' : ''} uppercase font-semibold text-[13px] lg:text-[11px] md:text-[10px]`}
                         onClick={() => {
                           if (item?.link) {
                             router.push(item.link);
@@ -41,18 +40,11 @@ const MenuPreview = ({ Details, setActiveMenu }: any) => {
                         }}
                       >
                         {item?.title}
-                        {item?.link && <GoArrowUpRight className="inline-block w-[14px] h-[14px] lg:w-[12px] lg:h-[12px] md:w-[11px] md:h-[11px]" />}
                       </div>
                       {(item?.sub_menu?.length || item?.master?.length > 0) && (
                         <div className="w-full">
                           {item?.master?.length > 0 && (
-                            <div
-                              className={
-                                item?.is_multiple_column
-                                  ? 'grid grid-cols-2 lg:grid-cols-1 py-2 gap-x-3 gap-y-1 w-full'
-                                  : 'flex flex-col py-2 gap-1 w-full'
-                              }
-                            >
+                            <div className="flex py-2 w-full flex-wrap gap-2">
                               {item.is_master === true &&
                                 item?.master?.map((masterItem: any, masterIndex: number) => {
                                   const findData = data?.find((el: any) => el.id === masterItem?.id);
@@ -63,18 +55,20 @@ const MenuPreview = ({ Details, setActiveMenu }: any) => {
                                         router.push(masterItem.value);
                                         reloadPage();
                                       }}
-                                      className="flex hover:text-[#256030] items-center cursor-pointer h-[30px] flex-row gap-1.5 min-w-0"
+                                      className="flex hover:text-[#256030] items-center cursor-pointer min-w-[48%] h-[30px] lg:w-full flex-row gap-2 md:w-full"
                                     >
                                       {masterItem && (
                                         <Image
                                           src={findData?.image?.[0] ?? '/images/no_images.svg'}
                                           alt={findData?.name}
                                           fallback="/images/no_images.svg"
-                                          className="!w-6 !h-6 shrink-0 p-[0px] object-contain"
+                                          className="!w-7 !h-7 p-[0px] object-contain"
                                           preview={false}
+                                          // width={25}
+                                          // height={25}
                                         />
                                       )}
-                                      <div className="cursor-pointer capitalize font-normal text-[13px] lg:text-[11px] md:text-[10px] whitespace-nowrap overflow-hidden text-ellipsis">
+                                      <div className={`cursor-pointer capitalize font-normal  text-[13px] lg:text-[11px] md:text-[10px]`}>
                                         {findData?.name}
                                       </div>
                                     </div>
@@ -83,7 +77,7 @@ const MenuPreview = ({ Details, setActiveMenu }: any) => {
                             </div>
                           )}
                           {item.is_master === false && item?.sub_menu?.length > 0 && item?.is_multiple_column ? (
-                            <div className="grid grid-cols-2 lg:grid-cols-1 py-2 gap-x-3 gap-y-1 w-full">
+                            <div className="flex w-full flex-wrap py-2 gap-2">
                               {item.is_master === false &&
                                 item?.sub_menu?.map((subItem: any, subIndex: number) => (
                                   <div
@@ -92,18 +86,20 @@ const MenuPreview = ({ Details, setActiveMenu }: any) => {
                                       router.push(subItem?.link);
                                       reloadPage();
                                     }}
-                                    className="flex gap-1.5 hover:text-[#256030] cursor-pointer flex-row h-[30px] items-center min-w-0"
+                                    className="flex gap-2 hover:text-[#256030] cursor-pointer min-w-[48%] lg:w-full flex-row  h-[30px] items-center md:w-full"
                                   >
                                     {subItem.image && (
                                       <Image
                                         preview={false}
                                         src={subItem.image ?? '/images/no_images.svg'}
                                         fallback="/images/no_images.svg"
-                                        className="object-contain !w-6 !h-6 shrink-0 p-[0px]"
+                                        className="object-contain !w-7 !h-7 p-[0px]"
                                         alt={subItem.title}
+                                        // width={25}
+                                        // height={25}
                                       />
                                     )}
-                                    <div className="cursor-pointer capitalize font-normal text-[13px] lg:text-[11px] md:text-[10px] whitespace-nowrap overflow-hidden text-ellipsis">
+                                    <div className={`cursor-pointer capitalize font-normal text-[13px] lg:text-[11px] md:text-[10px]`}>
                                       {subItem?.title}
                                     </div>
                                   </div>
@@ -148,7 +144,7 @@ const MenuPreview = ({ Details, setActiveMenu }: any) => {
             }
           })}
         </div>
-        {Details?.menu_images?.length > 0 && (Details?.menu_images[0]?.link || Details?.menu_images[0]?.image) && (
+        {Details?.menu_images?.length > 0 && (Details?.menu_images[0]?.link || Details?.menu_images[0]?.link) && (
           <div className="flex gap-3 border-l w-[270px] px-4 lg:px-3 md:px-2  lg:hidden flex-col ">
             {Details?.menu_images?.map((item: any, index: number) => (
               <div

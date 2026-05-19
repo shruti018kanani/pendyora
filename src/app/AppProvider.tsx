@@ -17,6 +17,7 @@ import { trackPageView } from '@/utils/metaPixel';
 const AppProviderData = ({ children, initialHeaderMegaData, initialPromoData }: any) => {
   const pathname = usePathname();
   const isFirstMount = useRef(true);
+  const isHomepage = pathname === '/';
 
   useEffect(() => {
     if (isFirstMount.current) {
@@ -112,8 +113,7 @@ const AppProviderData = ({ children, initialHeaderMegaData, initialPromoData }: 
           <AppProvider>
             <div className="relative">
               <Header
-                className="overflow-x-hidden sm:overflow-x-visible"
-                headerMetaData={initialHeaderMegaData}
+                className={isHomepage ? 'bg-transparent fixed top-0 left-0 right-0' : 'bg-transparent sticky top-0'}                headerMetaData={initialHeaderMegaData}
                 promoStripData={initialPromoData}
               />
               <Suspense

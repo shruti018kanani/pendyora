@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { LoadingOutlined } from '@ant-design/icons';
 import { Image, Select } from 'antd';
@@ -9,6 +9,7 @@ import { useAppSelector } from '@/store';
 import { formatCurrency } from '@/utils/common';
 
 import { Text } from '../Text';
+import HeaderViewDynamic from './components/HeaderViewDynamic';
 
 const HeaderTopPart = ({
   isFocused,
@@ -23,35 +24,50 @@ const HeaderTopPart = ({
   value,
   setRefresh,
   searchLoading,
+  headerMetaData,
 }: any) => {
   const { user } = useAppSelector((state) => state.auth.auth);
   const { cartProducts, wishlistProducts } = useAppSelector((state) => state?.cart);
   const { currencyList } = useAppSelector((state) => state?.master);
   const router = useRouter();
+  const [scrolled, setScrolled] = useState(false);
+  const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
+
+  
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
-    <div className="flex items-center justify-between">
-      <div className="w-[30%] flex justify-start">
-        <div>
-          <Link href="/virtual-appointment" className="flex gap-2">
-            <Image src="/images/appointment.svg" preview={false} fallback="/images/no-images.svg" alt="appointment" width={20} height={20} />
-            <p className="text-[14px] font-normal  lg:text-[12px]">Virtual Appointment</p>
-          </Link>
-        </div>
-      </div>
-      <div className="w-[17%] md:w-[25%]">
-        <Link href="/" className="h-[57px] w-[100%] lg:h-[50px] lg:w-full flex justify-center items-center">
+    <div
+    className={`relative w-full flex items-center justify-between pt-[10px] px-10 md:px-5 transition-[background-color,backdrop-filter,box-shadow,color] duration-300 ease-out pb-[10px] text-black ${
+      isMegaMenuOpen
+        ? 'bg-white shadow-[0_1px_0_rgba(45,23,14,0.06),0_16px_40px_-20px_rgba(45,23,14,0.18)]'
+        : scrolled
+          ? 'bg-white/70 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_1px_0_rgba(45,23,14,0.06),0_16px_40px_-20px_rgba(45,23,14,0.18)]'
+          : 'bg-transparent'
+    }`}
+  >
+      <div className="w-[15%] flex justify-center items-center h-[57px]">
+
+        <Link href="/" className="h-[30px] w-[100%] lg:h-[50px] lg:w-full flex justify-center items-center">
           <Image
-            src="/images/ashclair.svg"
+            src="/images/logo.png"
             // width={180}
             preview={false}
             // height={70}
             alt="Ashclair Logo"
-            className="object-contain lg:w-[60%]"
+            className="object-cover lg:w-[60%]"
           />
         </Link>
+
       </div>
-      <div className="flex w-[30%] md:!w-[35%] lg:w-[25%]  justify-end gap-3 md:gap-2  items-center">
+      <div className="w-[70%]">
+        <HeaderViewDynamic headerData={headerMetaData} onMenuOpenChange={setIsMegaMenuOpen}  />
+      </div>
+      <div className="flex w-[15%]  justify-end gap-3 md:gap-2  items-center">
         <div className="flex items-center">
           {!isFocused ? (
             <Image
@@ -177,6 +193,10 @@ const HeaderTopPart = ({
             </Text>
           )}
         </Link>
+
+        {/* <Link href="/virtual-appointment" className="flex gap-2">
+          <Image src="/images/appointment.svg" preview={false} fallback="/images/no-images.svg" alt="appointment" width={20} height={20} />
+        </Link> */}
         {currency && (
           <Select
             className="bg-transparent !w-[70px] p-0 home-header-select border-none"
