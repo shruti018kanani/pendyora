@@ -3,7 +3,23 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    font-family: 'Libre Franklin', sans-serif;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+  }
+
   :root {
+    /*------Pendyora brand palette------*/
+    --primary-color: #111111;
+    --secondary-color: #c9ae8a;
+    --accent-mocha: #8b7355;
+    --text-primary: #111111;
+    --bg-primary: #faf9f6;
+    --bg-secondary: #f8f4ee;
+    --bg-section: #f1e9de;
+    --accent-luxury: #c9ae8a;
+
     /*------Color variables------*/
     --white_text:#fff;
     --amber_a400: #ffcc00;
@@ -24,7 +40,7 @@
     --gray_800_01: #3b3b3b;
     --gray_900: #231f20;
     --gray_900_01: #240c0c;
-    --gray_900_02: #17381d;
+    --gray_900_02: #8b7355;
     --indigo_900: #172276;
     --indigo_900_01: #003087;
     --indigo_900_02: #001c64;
@@ -57,7 +73,7 @@
 }
 
 .ant-table-thead tr th.ant-table-cell{
-background-color :#C4B8AB !important;
+background-color: var(--accent-mocha) !important;
 }
 .ant-table-wrapper table{
   border-radius: 0 !important;
@@ -69,7 +85,7 @@ background-color :#C4B8AB !important;
   color:white !important;
 }
 .ant-btn-primary.ant-btn-solid,.ant-btn-primary {
-  color: #000000 !important;
+  color: var(--text_w) !important;
 }
 .ant-pagination-item{
   display: flex !important;

@@ -25,15 +25,16 @@ const AppProviderData = ({ children, initialHeaderMegaData, initialPromoData }: 
     }
     trackPageView();
   }, [pathname]);
-  const primary_color = '#17381d';
-  const secondary_color = '#818d64';
-  const prev_secondary_color = '#c5ccb4';
+  const primary_color = '#111111';
+  const secondary_color = '#C9AE8A';
+  const prev_secondary_color = '#F1E9DE';
   const customTheme = {
     token: {
-      colorPrimary: primary_color, // Primary color (for buttons, active links, etc.)
-      colorPrimaryBg: '#E8F5E9', // Background color for primary elements
-      colorText: '#212121', // Default text color
-      colorBgBase: '#FAFAFA', // Background color for the application
+      colorPrimary: primary_color,
+      colorPrimaryBg: '#F8F4EE',
+      colorText: '#111111',
+      colorBgBase: '#FAF9F6',
+      fontFamily: "'Libre Franklin', sans-serif",
       // colorBorder: "#BDBDBD", // Border color for inputs, cards, etc.
       colorSuccess: '#388E3C', // Success message or status color
       colorWarning: '#F57C00', // Warning message or status color
@@ -44,7 +45,7 @@ const AppProviderData = ({ children, initialHeaderMegaData, initialPromoData }: 
       tableSelectedRowBg: '#A7FFEB', // Background color for selected table rows
       tableRowActiveBg: '#64FFDA', // Background color for active rows
       // colorTextHeading: "#2E7D32", // Heading text color
-      colorBgContainer: '#FFFFFF', // Background for containers (like cards)
+      colorBgContainer: '#FAF9F6',
       borderRadius: 8, // Default border radius for components
     },
   };
@@ -111,13 +112,13 @@ const AppProviderData = ({ children, initialHeaderMegaData, initialPromoData }: 
           <AppProvider>
             <div className="relative">
               <Header
-                className="bg-white overflow-x-hidden sm:overflow-x-visible sm:sticky sm:top-0"
+                className="overflow-x-hidden sm:overflow-x-visible"
                 headerMetaData={initialHeaderMegaData}
                 promoStripData={initialPromoData}
               />
               <Suspense
                 fallback={
-                  <div className="flex justify-center items-center h-[80vh] bg-white">
+                  <div className="flex justify-center items-center h-[80vh] bg-ivory">
                     <div className="w-full flex justify-center items-center">
                       <LuLoader className="h-10 w-10 animate-spin text-primary" />
                     </div>

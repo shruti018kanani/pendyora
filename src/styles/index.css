@@ -1,16 +1,22 @@
 :root {
-  --primary-color: #17381d;
-  --secondary-color: #818d64;
+  --primary-color: #111111;
+  --secondary-color: #c9ae8a;
+  --accent-mocha: #8b7355;
   --text_w: #ffffff;
+  --text-primary: #111111;
+  --bg-primary: #faf9f6;
+  --bg-secondary: #f8f4ee;
+  --bg-section: #f1e9de;
+  --accent-luxury: #c9ae8a;
 }
 
 body {
   margin: 0;
   padding: 0;
-  /* font-family: Noto Sans,inherit; */
+  font-family: 'Libre Franklin', sans-serif;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
 }
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Castoro&display=swap');
 
 img {
   user-drag: none !important;
@@ -48,7 +54,7 @@ right:27px !important;
 
 
 .blog-css-setup div p a,.education-css-setup div p a  {
-  color: #17381D !important;
+  color: var(--primary-color) !important;
   text-decoration: underline;
 }
 
@@ -137,7 +143,7 @@ right:27px !important;
   z-index: -1;
   pointer-events: none;
   background: repeating-conic-gradient(from var(--angle, 0deg),
-    var(--l, #0000 0% 0%, #17381d)) border-box;
+    var(--l, #0000 0% 0%, var(--primary-color))) border-box;
   animation: rotateGradient 4s linear infinite;
 
   /* Mask to make gradient only appear in the border area */
@@ -234,7 +240,7 @@ right:27px !important;
 }
 
 .about-us-css-setup .ql-editor{
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  font-family: 'Libre Franklin', sans-serif;
 }
 .about-us-css-setup .ql-editor h2{
   margin-bottom: 0.5em !important;
