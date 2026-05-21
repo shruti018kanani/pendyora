@@ -79,9 +79,9 @@ const OurCollaborations = () => {
     socialPost?.length > 0 && (
       <section
         ref={sectionRef}
-        className="py-[74px] bg-primary overflow-hidden 2xl:py-14 xl:py-14 lg:py-10 sm:py-8"
+        className="py-[80px] bg-primary overflow-hidden lg:py-10 sm:py-8"
       >
-        <div className="container-xs 2xl:px-[100px] xl:px-24 lg:px-20 md:px-5 sm:px-3">
+        <div className="container-xs px-20 md:px-5 sm:px-3">
 
           {/* Header */}
           <motion.div
@@ -102,36 +102,40 @@ const OurCollaborations = () => {
             </p>
           </motion.div>
 
-          {/* Reel Swiper */}
+          {/* Outer wrapper — nav buttons positioned here, outside the clip zone */}
           <div className="relative">
-            <Swiper
-              spaceBetween={16}
-              modules={[Navigation]}
-              navigation={{ nextEl: '.collab-next', prevEl: '.collab-prev' }}
-              className="!overflow-visible"
-              breakpoints={{
-                0:    { slidesPerView: 1.4 },
-                550:  { slidesPerView: 2 },
-                769:  { slidesPerView: 3 },
-                1024: { slidesPerView: 5 },
-                1280: { slidesPerView: 6 },
-              }}
-            >
-              {socialPost.map((item: any, index: number) => (
-                <SwiperSlide key={item.id}>
-                  <ReelCard
-                    item={item}
-                    index={index}
-                    sourceOptions={sourceOptions}
-                    scrollYProgress={scrollYProgress}
-                    onClick={() => handleCardClick(index)}
-                    hasVideoError={videoError}
-                    onVideoError={() => setVideoError(true)}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+            {/* Clip zone — only Swiper inside so parallax is contained, nav buttons are not clipped */}
+            <div className="py-20 overflow-hidden">
+              <Swiper
+                spaceBetween={16}
+                modules={[Navigation]}
+                navigation={{ nextEl: '.collab-next', prevEl: '.collab-prev' }}
+                className="!overflow-visible"
+                breakpoints={{
+                  0:    { slidesPerView: 1 },
+                  640:  { slidesPerView: 2 },
+                  768:  { slidesPerView: 2 },
+                  1024: { slidesPerView: Math.min(socialPost.length, 5) },
+                  1280: { slidesPerView: Math.min(socialPost.length, 6) },
+                }}
+              >
+                {socialPost.map((item: any, index: number) => (
+                  <SwiperSlide key={item.id}>
+                    <ReelCard
+                      item={item}
+                      index={index}
+                      sourceOptions={sourceOptions}
+                      scrollYProgress={scrollYProgress}
+                      onClick={() => handleCardClick(index)}
+                      hasVideoError={videoError}
+                      onVideoError={() => setVideoError(true)}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
 
+            {/* Nav buttons — siblings of the clip zone, not clipped by overflow-hidden */}
             <button className="collab-prev absolute left-[-44px] top-1/2 -translate-y-1/2 z-10 w-9 h-9 border border-text_w/20 flex items-center justify-center text-text_w hover:border-luxury hover:text-luxury transition-all duration-300 disabled:opacity-20 sm:hidden">
               <MdArrowBackIos size={15} />
             </button>

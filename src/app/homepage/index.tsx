@@ -8,13 +8,16 @@ import ShopByCategory from './ShopByCategory';
 import { FeaturedIn } from '../../page';
 import WhyAllorya from './../../components/WhyAllorya';
 import AlloryaStory from './AlloryaStory';
+import Craftsmanship from './Craftsmanship';
 import Motion from './Motion';
 import Drops from './Drops';
+import Testimonials from './Testimonials';
 import HomepageBanner from './HomepageBanner';
 import OurBestSellers from './OurBestSellers';
 import OurCollabrations from './OurCollabrations';
 import ShopGemStone from './ShopGemStone';
 import GiftguideFrame67 from '../giftguide/GiftguideFrame67';
+import RingBuilder from './RingBuilder';
 
 async function getBannerData() {
   try {
@@ -78,16 +81,19 @@ export default async function HOMEPAGEPage() {
       <div>
         <HomepageBanner bannerData={initialBannerData} />
         <ShopByCategory bannerData={initialCategoryBannerData} />
-        <CustomizedForYou />
-        <ShopGemStone />
+        {/* <CustomizedForYou /> */}
+        {/* <ShopGemStone /> */}
         <OurCollabrations />
         <OurBestSellers />
-        <AlloryaStory />
+        <RingBuilder />
+        {/* <AlloryaStory /> */}
+        <Craftsmanship />
         <Motion />
         <Drops />
+        <Testimonials />
         <GiftguideFrame67 />
         <WhyAllorya />
-        <FeaturedIn />
+        {/* <FeaturedIn /> */}
         <InspiredByCommunity />
       </div>
     </div>

@@ -23,7 +23,7 @@ const data = [
 export default function HomepageGroup3338() {
   return (
     <div className="self-stretch">
-      <div className="container-xs flex gap-2.5 sm:gap-2  2xl:justify-between xl:flex-row xl:justify-between sm:grid sm:grid-cols-2 sm:px-3">
+      <div className="container-xs flex gap-1 sm:gap-1  2xl:justify-between xl:flex-row xl:justify-between sm:grid sm:grid-cols-2 sm:px-3">
         <Suspense fallback={<div>Loading feed...</div>}>
           {data.map((d, index) => (
             <UserProfile2

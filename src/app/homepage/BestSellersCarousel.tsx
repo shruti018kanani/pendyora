@@ -56,138 +56,167 @@ export default function BestSellersCarousel({ products }: { products: Product[] 
   const sectionRef = useRef<HTMLDivElement>(null);
   const { cardWidth, visible } = useBreakpoint();
   const step = cardWidth + GAP;
-  const maxSlide = -(products.length - visible) * step;
 
-  // Scroll-driven pan
+  // Section height — tall enough so vertical scroll drives the full horizontal pan
+  const [sectionHeight, setSectionHeight] = useState('260vh');
+  const maxXMV = useMotionValue(0);
+
+  useEffect(() => {
+    const compute = () => {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const maxX = Math.max(0, products.length * step - vw + 120);
+      maxXMV.set(maxX);
+      // 100vh sticky content + extra scroll for the pan, minimum 200vh
+      const extraVh = (maxX / vh) * 100;
+      setSectionHeight(`${Math.max(200, Math.ceil(100 + extraVh + 40))}vh`);
+    };
+    compute();
+    window.addEventListener('resize', compute);
+    return () => window.removeEventListener('resize', compute);
+  }, [products.length, step]);
+
+  // Progress from 0→1 across the full tall section (sticky theater pattern)
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ['start end', 'end start'],
+    offset: ['start start', 'end end'],
   });
-  // Recompute range when step/maxSlide changes
-  const maxSlideMV = useMotionValue(maxSlide);
-  useEffect(() => { maxSlideMV.set(maxSlide); }, [maxSlide]);
 
-  const scrollX = useTransform([scrollYProgress, maxSlideMV], ([p, max]) =>
-    (p as number) * (max as number)
+  // Scroll-driven horizontal pan
+  const scrollX = useTransform([scrollYProgress, maxXMV], ([p, max]) =>
+    -(p as number) * (max as number)
   );
 
-  // Manual button offset (springs for smooth easing)
+  // Manual button offset with spring easing
   const rawManualX = useMotionValue(0);
   const manualX = useSpring(rawManualX, { stiffness: 280, damping: 32 });
 
   // Combined + clamped
-  const x = useTransform([scrollX, manualX], ([s, m]) =>
-    Math.max(maxSlide, Math.min(0, (s as number) + (m as number)))
-  );
+  const x = useTransform([scrollX, manualX], ([s, m]) => {
+    const minX = -maxXMV.get();
+    return Math.max(minX, Math.min(0, (s as number) + (m as number)));
+  });
 
-  // Track current x for disabled state
   const [xVal, setXVal] = useState(0);
+  const [maxXVal, setMaxXVal] = useState(0);
   useMotionValueEvent(x, 'change', setXVal);
+  useMotionValueEvent(maxXMV, 'change', setMaxXVal);
 
   const canPrev = xVal < -8;
-  const canNext = xVal > maxSlide + 8;
+  const canNext = xVal > -maxXVal + 8;
 
   const prev = () => rawManualX.set(Math.min(0, rawManualX.get() + step));
-  const next = () => rawManualX.set(Math.max(maxSlide, rawManualX.get() - step));
+  const next = () => rawManualX.set(Math.max(-maxXVal, rawManualX.get() - step));
 
-  // Reset manual offset on resize so cards stay in range
   useEffect(() => { rawManualX.set(0); }, [cardWidth]);
 
   return (
-    <section ref={sectionRef} className="py-[74px] bg-ivory overflow-hidden 2xl:py-14 xl:py-14 lg:py-10 sm:py-8">
-      <div className="container-xs 2xl:px-[100px] xl:px-24 lg:px-20 md:px-5 sm:px-3">
+    <section ref={sectionRef} className="relative bg-ivory" style={{ height: sectionHeight }}>
+      {/* Sticky theater — locks to top while the tall section scrolls past */}
+      <div
+        className="sticky flex flex-col justify-start overflow-hidden pt-10 pb-14 lg:pt-8 lg:pb-12 sm:pt-6 sm:pb-8"
+        style={{ top: 'var(--header-height)', height: 'calc(100vh - var(--header-height))' }}
+      >
 
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="flex flex-wrap items-end justify-between gap-5 mb-14 lg:mb-10 sm:mb-6"
-        >
-          <div>
-            <p className="font-libre text-xs tracking-[0.3em] text-luxury mb-3 uppercase">
-              Customer Favorites
-            </p>
-            <h2 className="font-cormorant text-[48px] uppercase tracking-[2.2px] text-primary leading-tight lg:text-[32px] sm:text-[22px]">
-              Our Bestsellers Selection
-            </h2>
-          </div>
-
-          <div className="flex items-center gap-6">
-            {/* Arrows */}
-            <div className="flex items-center gap-3">
-              <button
-                onClick={prev}
-                disabled={!canPrev}
-                aria-label="Previous"
-                className="w-10 h-10 border border-primary/30 flex items-center justify-center text-primary hover:border-luxury hover:text-luxury transition-all duration-300 disabled:opacity-20 disabled:cursor-not-allowed"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M19 12H5M12 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <button
-                onClick={next}
-                disabled={!canNext}
-                aria-label="Next"
-                className="w-10 h-10 border border-primary/30 flex items-center justify-center text-primary hover:border-luxury hover:text-luxury transition-all duration-300 disabled:opacity-20 disabled:cursor-not-allowed"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </button>
+        {/* Header — z-10 keeps it above the will-change:transform track layer */}
+        <div className="relative z-10 container-xs px-20 md:px-5 sm:px-3 pb-14 lg:pb-10 sm:pb-6">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="flex  items-center justify-between gap-5"
+          >
+            <div>
+              <h2 className="font-cormorant text-[48px] uppercase tracking-[2.2px] text-primary leading-tight lg:text-[32px] sm:text-[22px]">
+                Our Bestsellers Selection
+              </h2>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <Link
-                href="/all"
-                className="font-libre text-sm tracking-[1.5px] uppercase text-primary hover:text-luxury transition-colors duration-300 flex items-center gap-2 sm:hidden"
+            <div className="flex items-center gap-6">
+              {/* Prev / Next */}
+              {/* <div className="flex items-center gap-3">
+                <button
+                  onClick={prev}
+                  disabled={!canPrev}
+                  aria-label="Previous"
+                  className="w-10 h-10 border border-primary/30 flex items-center justify-center text-primary hover:border-luxury hover:text-luxury transition-all duration-300 disabled:opacity-20 disabled:cursor-not-allowed"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={next}
+                  disabled={!canNext}
+                  aria-label="Next"
+                  className="w-10 h-10 border border-primary/30 flex items-center justify-center text-primary hover:border-luxury hover:text-luxury transition-all duration-300 disabled:opacity-20 disabled:cursor-not-allowed"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div> */}
+
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
               >
-                Discover All
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </Link>
-            </motion.div>
-          </div>
-        </motion.div>
+                <Link
+                  href="/all"
+                  className="font-libre text-sm tracking-[1.5px] uppercase text-primary hover:text-luxury transition-colors duration-300 flex items-center gap-2 sm:hidden"
+                >
+                  Discover All
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
 
-      </div>
+        {/* Horizontal track */}
+        <div className="relative flex-1 min-h-0">
+          <motion.div
+            style={{ x }}
+            className="absolute left-0 top-0 h-full flex items-center gap-5 will-change-transform
+              2xl:pl-[calc((100vw-1400px)/2+100px)] xl:pl-24 lg:pl-20 md:pl-5 sm:pl-3 pl-[calc((100vw-1400px)/2+100px)]"
+          >
+            {products.map((product, index) => (
+              <ProductCard
+                key={index}
+                product={product}
+                index={index}
+                cardWidth={cardWidth}
+              />
+            ))}
+            {/* trailing spacer so last card doesn't sit at the hard right edge */}
+            <div className="shrink-0 w-[10vw]" />
+          </motion.div>
 
-      {/* Scroll-driven track — outside container so cards bleed right */}
-      <motion.div
-        style={{ x, gap: GAP }}
-        className="flex 2xl:pl-[calc((100vw-1400px)/2+100px)] xl:pl-24 lg:pl-20 md:pl-5 sm:pl-3 pl-[calc((100vw-1400px)/2+100px)]"
-      >
-        {products.map((product, index) => (
-          <ProductCard
-            key={index}
-            product={product}
-            index={index}
-            cardWidth={cardWidth}
-          />
-        ))}
-      </motion.div>
+          {/* Edge fades */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-ivory to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-ivory to-transparent z-10" />
+        </div>
 
-      {/* Mobile CTA */}
-      <div className="container-xs 2xl:px-[100px] xl:px-24 lg:px-20 md:px-5 sm:px-3">
-        <div className="justify-center mt-8 hidden sm:flex">
+        {/* Mobile CTA */}
+        <div className="container-xs md:px-5 sm:px-3 mt-6 hidden sm:flex justify-center">
           <Link href="/all">
             <button className="font-libre text-sm tracking-[1.5px] uppercase bg-primary text-text_w px-10 h-[45px] hover:bg-mocha transition-colors duration-300">
               Discover All
             </button>
           </Link>
         </div>
+
       </div>
     </section>
   );
 }
+
+// ─── Product Card (unchanged) ─────────────────────────────────────────────────
 
 function ProductCard({
   product,
@@ -215,8 +244,8 @@ function ProductCard({
       className="flex-shrink-0 cursor-pointer group"
       style={{ width: cardWidth }}
     >
-      {/* Image container */}
-      <div className="relative overflow-hidden mb-4" style={{ aspectRatio: '3/4' }}>
+      {/* Image */}
+      <div className="relative overflow-hidden mb-4" style={{ aspectRatio: '1/1' }}>
         <motion.div
           transition={{ duration: 0.6 }}
           animate={{ scale: hovered ? 1.05 : 1 }}
@@ -229,22 +258,19 @@ function ProductCard({
                 : (product.productImage ?? '/images/no_images.svg')
             }
             alt={typeof product.productName === 'string' ? product.productName : 'Product'}
-            width={"100%"}
-            height={"100%"}
+            width="100%"
+            height="100%"
             preview={false}
             className="!object-cover"
-            sizes={`${cardWidth}px`}
           />
         </motion.div>
 
-        {/* Special title badge */}
         {specialTitle && (
           <div className="absolute top-4 left-4 z-10 px-3 py-1.5 bg-luxury text-text_w font-libre text-[10px] tracking-widest uppercase">
             {specialTitle}
           </div>
         )}
 
-        {/* Discount badge */}
         {hasDiscount && (
           <div className="absolute top-4 right-4 z-10 px-3 py-1.5 bg-primary text-text_w font-libre text-[10px] tracking-widest uppercase">
             {product.discount_type === 'percentage'
@@ -253,7 +279,7 @@ function ProductCard({
           </div>
         )}
 
-        {/* Quick view overlay — slides up on hover */}
+        {/* Quick view — slides up on hover */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={hovered ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -272,12 +298,11 @@ function ProductCard({
         </motion.div>
       </div>
 
-      {/* Card info */}
+      {/* Info */}
       <div className="space-y-1">
         <h3 className="font-cormorant text-xl text-primary group-hover:text-luxury transition-colors duration-300 leading-snug line-clamp-1">
           {product.productName}
         </h3>
-
         <div className="flex items-center gap-2">
           {hasDiscount ? (
             <>

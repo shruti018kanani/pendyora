@@ -25,9 +25,9 @@ export default function UserProfile2({
       </div>
       <div className="absolute w-full bottom-0">
         <Text
-          size="textxl"
+          size="text2xl"
           as="p"
-          className=" bg-black/25 p-5 sm:p-2 whitespace-nowrap  m-auto !font-['Inter'] uppercase !text-[#ffffff] sm:bottom-4 sm:left-2 sm:text-[13px] sm:text-center"
+          className=" bg-transparent p-5 sm:p-2 whitespace-nowrap  m-auto !font-cormorant uppercase !text-[#ffffff] sm:bottom-4 sm:left-2 sm:text-[13px] sm:text-center"
         >
           {headlineText}
         </Text>
