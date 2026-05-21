@@ -96,7 +96,7 @@ export default async function HOMEPAGEPage() {
         
         
         <Drops />
-        <GiftguideFrame67 />
+        {/* <GiftguideFrame67 /> */}
         <Testimonials />
         {/* <WhyAllorya /> */}
         {/* <FeaturedIn /> */}

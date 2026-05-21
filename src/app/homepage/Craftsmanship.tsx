@@ -15,7 +15,7 @@ export default function Craftsmanship() {
           muted
           loop
           playsInline
-          className="h-full w-full object-cover opacity-60"
+          className="h-full w-full object-cover"
         >
           <source src="/videos/craftman.mp4" type="video/mp4" />
         </video>

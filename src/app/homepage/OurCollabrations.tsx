@@ -110,7 +110,7 @@ const OurCollaborations = () => {
                 spaceBetween={16}
                 modules={[Navigation]}
                 navigation={{ nextEl: '.collab-next', prevEl: '.collab-prev' }}
-                className="!overflow-visible"
+                style={{ overflow: 'visible' }}
                 breakpoints={{
                   0:    { slidesPerView: 1 },
                   640:  { slidesPerView: 2 },

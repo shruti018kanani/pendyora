@@ -35,33 +35,33 @@ export default function Drops() {
   ];
 
   return (
-    <section id="drops" className="relative bg-primary text-text_w py-40 lg:py-28 md:py-20 sm:py-14 overflow-hidden">
+    <section id="drops" className="relative bg-primary text-text_w overflow-hidden">
       {/* background pulses */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-luxury/10 blur-3xl" />
         <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-luxury/15 blur-3xl" />
       </div>
 
-      <div className="container-xs 2xl:px-[160px] xl:px-24 lg:px-20 md:px-5 sm:px-3 relative flex gap-12 items-center md:flex-col">
-        <div className="flex-1">
-          <p className="text-[11px] uppercase tracking-[0.2em] text-luxury mb-5 flex items-center gap-3">
+      <div className="relative flex items-center justify-between md:flex-col">
+        <div className="flex flex-col justify-center items-center p-4 gap-6 w-[45%] md:w-full text-center">
+          <p className="text-[11px] uppercase tracking-[0.2em] text-luxury flex items-center gap-3">
             <span className="h-2 w-2 bg-luxury rounded-full animate-pulse" /> Limited Drop · {drop.edition}
           </p>
-          <h2 className="font-cormorant text-[clamp(2.5rem,6vw,6rem)] leading-[0.92] text-text_w">
+          <h2 className="font-cormorant text-[clamp(2rem,5vw,5rem)] leading-[0.92] text-text_w">
             {drop.name.split(" ").map((w, i) => (
               <span key={i} className="inline-block mr-3">
                 {i === 1 ? <span className="italic text-luxury">{w}</span> : w}
               </span>
             ))}
           </h2>
-          <p className="mt-6 max-w-md text-text_w/70 leading-relaxed">
+          <p className="max-w-md text-text_w/70 leading-relaxed">
             A single chain. Twenty-four numbered editions. Released at midnight, Florence time. Once gone, never reissued.
           </p>
 
           {/* countdown */}
-          <div className="mt-10 grid grid-cols-4 gap-2 max-w-md">
+          <div className="grid grid-cols-4 gap-2 max-w-md">
             {cells.map((c) => (
-              <div key={c.l} className="bg-white/5 border border-white/10 px-3 py-4 text-center">
+              <div key={c.l} className="bg-white/5 border aspect-square border-white/10 px-3 py-4 text-center">
                 <p className="font-cormorant text-5xl lg:text-4xl md:text-3xl sm:text-2xl text-luxury tabular-nums leading-none">
                   {c.v.toString().padStart(2, "0")}
                 </p>
@@ -70,7 +70,7 @@ export default function Drops() {
             ))}
           </div>
 
-          <div className="mt-10 flex items-center gap-5">
+          <div className="flex items-center gap-5">
             <a
               href="/virtual-appointment"
               className="group inline-flex items-center gap-3 bg-text_w text-primary px-8 py-4 text-[11px] uppercase tracking-[0.15em] hover:bg-luxury hover:text-text_w transition-all duration-500"
@@ -83,9 +83,16 @@ export default function Drops() {
           </div>
         </div>
 
-        <div className="w-[55%] flex-shrink-0 md:w-full relative">
-          <div className="relative aspect-[4/5] overflow-hidden">
-            <img src={drop.img} alt={drop.name} className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+        <div className="w-[55%] flex-shrink-0 md:w-full relative h-[80vh]">
+          <div className="relative aspect-[3/4] overflow-hidden">
+            <video
+              src="/videos/model.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 h-full w-full object-cover"
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-primary/30" />
             <span className="absolute top-5 left-5 text-[10px] uppercase tracking-[0.15em] text-text_w/80">{drop.code}</span>
             <span className="absolute top-5 right-5 text-[10px] uppercase tracking-[0.15em] text-text_w/80">Edition {drop.edition}</span>
