@@ -109,7 +109,7 @@ export default function ShopGemStone() {
 
   return (
     gemstone?.length > 0 && (
-      <div className="mt-20 flex justify-center xl:mt-10 xl:-mb-14 2xl:mt-10 2xl-mb-14 sm:mt-[40px] sm:mb-5">
+      <div className="mt-20 flex justify-center xl:mt-10 2xl:mt-10  sm:mt-[40px] sm:mb-5">
         <div className="container-xs flex md:flex-col items-center justify-between gap-5 2xl:px-[160px] xl:px-26 lg:px-20 sm:px-3">
           <div className="md:flex w-full flex-wrap justify-between gap-5 hidden">
             <Text size="textlg" as="p" className="uppercase tracking-[1.30px]">

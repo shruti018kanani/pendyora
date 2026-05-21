@@ -8,6 +8,8 @@ import ShopByCategory from './ShopByCategory';
 import { FeaturedIn } from '../../page';
 import WhyAllorya from './../../components/WhyAllorya';
 import AlloryaStory from './AlloryaStory';
+import Motion from './Motion';
+import Drops from './Drops';
 import HomepageBanner from './HomepageBanner';
 import OurBestSellers from './OurBestSellers';
 import OurCollabrations from './OurCollabrations';
@@ -81,6 +83,8 @@ export default async function HOMEPAGEPage() {
         <OurCollabrations />
         <OurBestSellers />
         <AlloryaStory />
+        <Motion />
+        <Drops />
         <GiftguideFrame67 />
         <WhyAllorya />
         <FeaturedIn />
