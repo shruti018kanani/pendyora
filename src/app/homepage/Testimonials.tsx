@@ -39,7 +39,7 @@ function Card({ r }: { r: (typeof REVIEWS)[number] }) {
 export default function Testimonials() {
   const loop = [...REVIEWS, ...REVIEWS];
   return (
-    <section className="relative py-36 lg:py-28 md:py-20 sm:py-14 bg-section overflow-hidden">
+    <section className="relative py-36 lg:py-28 md:py-20 sm:py-14 bg-ivory overflow-hidden">
       <div className="mx-auto max-w-[1600px] px-10 lg:px-8 md:px-5 sm:px-3 flex items-end justify-between mb-14 lg:mb-10 md:mb-8 sm:mb-6">
         <div>
           <h2 className="font-cormorant text-7xl lg:text-5xl md:text-4xl sm:text-3xl mt-4 leading-[0.95] text-primary">

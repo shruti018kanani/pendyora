@@ -18,6 +18,7 @@ import OurCollabrations from './OurCollabrations';
 import ShopGemStone from './ShopGemStone';
 import GiftguideFrame67 from '../giftguide/GiftguideFrame67';
 import RingBuilder from './RingBuilder';
+import ShopByLook from './ShopByLook';
 
 async function getBannerData() {
   try {
@@ -81,20 +82,25 @@ export default async function HOMEPAGEPage() {
       <div>
         <HomepageBanner bannerData={initialBannerData} />
         <ShopByCategory bannerData={initialCategoryBannerData} />
+        <Motion />
+        <OurBestSellers />
+        <Craftsmanship />
+        <ShopByLook />
         {/* <CustomizedForYou /> */}
         {/* <ShopGemStone /> */}
         <OurCollabrations />
-        <OurBestSellers />
+       
+        
         <RingBuilder />
         {/* <AlloryaStory /> */}
-        <Craftsmanship />
-        <Motion />
+        
+        
         <Drops />
-        <Testimonials />
         <GiftguideFrame67 />
-        <WhyAllorya />
+        <Testimonials />
+        {/* <WhyAllorya /> */}
         {/* <FeaturedIn /> */}
-        <InspiredByCommunity />
+        {/* <InspiredByCommunity /> */}
       </div>
     </div>
   );

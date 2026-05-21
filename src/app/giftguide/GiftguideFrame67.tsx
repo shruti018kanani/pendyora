@@ -7,14 +7,14 @@ export default function GiftguideFrame67() {
   return (
     <>
       <div className="flex flex-col items-center sm:hidden my-[60px]  xl:my-[40px] lg:my-[30px]">
-        <div className="container-xs px-8 mb-[60px]  xl:mb-[40px] lg:mb-[30px] md:px-5">
+        <div className="w-full px-8 mb-[60px]  xl:mb-[40px] lg:mb-[30px] md:px-5">
           <div className="flex items-center justify-between gap-5 md:flex-col">
              <h2 className="font-cormorant text-3xl mt-4 leading-[0.95] text-primary">
             " Jewellery to live in. The finishing touches for effortless everyday style. "
           </h2>
           </div>
         </div>
-        <div className="container-xs flex justify-center gap-2.5 self-stretch md:flex-col">
+        <div className="flex justify-center gap-2.5 self-stretch md:flex-col">
           {/* <Suspense fallback={<div>Loading feed...</div>}>
           {data.map((d, index) => (
             <UserProfile2 {...d} key={"group2603" + index} />

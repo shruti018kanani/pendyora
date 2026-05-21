@@ -32,7 +32,7 @@ export default function RingBuilder() {
   const active = metals.find((m) => m.id === metal)!;
 
   return (
-    <section className="relative bg-section py-24 md:py-16 overflow-hidden">
+    <section className="relative bg-ivory py-24 md:py-16 overflow-hidden">
       <div className="relative mx-auto max-w-[1500px] px-6 md:px-5 grid grid-cols-2 md:grid-cols-1 gap-12 items-center">
         {/* Left — controls */}
         <div>

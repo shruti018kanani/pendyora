@@ -153,7 +153,7 @@ export default function Footer({ ...props }: Props) {
   return (
     <footer {...props} className={`${props.className} flex flex-col gap-[0px] sm:gap-[0px] lg:gap-[0px]`}>
       <HoneypotField />
-      <BuyWithConfidence />
+      {/* <BuyWithConfidence /> */}
       <div className="mt-0 flex justify-center self-stretch sm:hidden">
         <div className="container-xs flex items-center justify-center 2xl:px-[50px] xl:px-[50px] lg:px-[20px] md:flex-col md:px-5 w-full">
           <div className="flex pt-10 w-full justify-between lg:gap-5">

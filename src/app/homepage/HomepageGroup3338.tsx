@@ -18,12 +18,17 @@ const data = [
     headlineText: 'Less than $2000',
     path: '/less-than-two-thousand',
   },
+  {
+    userImage: '/img_ashclair_polinach_11007534.png',
+    headlineText: 'Less than $500',
+    path: '/less-than-five-hundred',
+  },
 ];
 
 export default function HomepageGroup3338() {
   return (
-    <div className="self-stretch">
-      <div className="container-xs flex gap-1 sm:gap-1  2xl:justify-between xl:flex-row xl:justify-between sm:grid sm:grid-cols-2 sm:px-3">
+    <div className="self-stretch w-full">
+      <div className=" flex gap-1 sm:gap-1  2xl:justify-between xl:flex-row xl:justify-between sm:grid sm:grid-cols-2 sm:px-3 w-full">
         <Suspense fallback={<div>Loading feed...</div>}>
           {data.map((d, index) => (
             <UserProfile2
