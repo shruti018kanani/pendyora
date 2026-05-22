@@ -81,8 +81,9 @@ export default async function HOMEPAGEPage() {
     <div className="w-full bg-[#ffffff] sm:relative">
       <div>
         <HomepageBanner bannerData={initialBannerData} />
-        <ShopByCategory bannerData={initialCategoryBannerData} />
+        {/* <div className="mt-16 sm:mt-10" /> */}
         <Motion />
+        <ShopByCategory bannerData={initialCategoryBannerData} />
         <OurBestSellers />
         <Craftsmanship />
         <ShopByLook />

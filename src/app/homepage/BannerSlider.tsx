@@ -29,6 +29,11 @@ export default function BannerSwiper({ bannerData }: any) {
   const [containerHeight, setContainerHeight] = useState(0);
   const [showFonts, setShowFonts] = useState(false);
 
+  // Track active slide to restart zoom animation
+  const [realIndex, setRealIndex] = useState(0);
+  const animTickRef = useRef(0);
+  const [animTick, setAnimTick] = useState(0);
+
   useEffect(() => {
     setTimeout(() => {
       setShowNavigation(true);
@@ -164,10 +169,27 @@ export default function BannerSwiper({ bannerData }: any) {
     // default = filled
     return base;
   };
+
+  const handleSlideChange = (swiper: any) => {
+    animTickRef.current += 1;
+    setAnimTick(animTickRef.current);
+    setRealIndex(swiper.realIndex);
+    setIsVideoPlaying(true);
+    setIsBeginning(swiper.isBeginning);
+    setIsEnd(swiper.isEnd);
+  };
+
   return (
-    <div ref={containerRef} onContextMenu={preventRightClick} style={{ WebkitTouchCallout: 'none' }}>
+    <div ref={containerRef} onContextMenu={preventRightClick} style={{ WebkitTouchCallout: 'none', height: '100vh', overflow: 'hidden' }}>
+      <style>{`
+        @keyframes bannerZoomIn {
+          from { transform: scale(1); }
+          to { transform: scale(1.08); }
+        }
+      `}</style>
+
       {/* Desktop Banner */}
-      <div className="sm:hidden">
+      <div className="sm:hidden h-full">
         <Swiper
           ref={desktopSwiperRef}
           navigation={
@@ -180,44 +202,45 @@ export default function BannerSwiper({ bannerData }: any) {
           }
           pagination={{
             clickable: true,
-            // renderBullet: function (index, className) {
-            //   return '<span class="' + className + '">' + (index + 1) + '</span>';
-            // },
           }}
           modules={[Navigation, Autoplay, Pagination]}
-          className="homepage-banner-swiper"
+          className="homepage-banner-swiper !h-full"
           loop={true}
           autoplay={{
             delay: 5000,
             disableOnInteraction: false,
           }}
           speed={1000}
-          onSlideChange={(swiper) => {
-            setIsVideoPlaying(true);
-            setIsBeginning(swiper.isBeginning);
-            setIsEnd(swiper.isEnd);
-          }}
+          onSlideChange={handleSlideChange}
           onAfterInit={(swiper) => {
             setIsBeginning(swiper.isBeginning);
             setIsEnd(swiper.isEnd);
           }}
         >
           {bannerData?.banner_image?.map((banner: any, index: number) => (
-            <SwiperSlide key={index} className="!aspect-[12/5] !w-full !relative">
+            <SwiperSlide key={index} className="!h-full !w-full !relative overflow-hidden">
               {!banner?.is_desktop_image ? (
                 banner?.desktop_image?.toLowerCase().includes('.mp4') && (
                   <ProtectedVideo src={banner?.desktop_image} autoPlay={isVideoPlaying} link={banner?.http_link || null} className="max-h-[700px]" />
                 )
               ) : (
-                <div className="!w-full !h-full">
-                  <Image
-                    src={banner?.desktop_image}
-                    preview={false}
-                    draggable={false}
-                    loading="lazy"
-                    className="w-full min-w-[100vw] !aspect-[12/5] pointer-events-none"
-                    style={{ WebkitTouchCallout: 'none' }}
-                  />
+                <div className="!w-full !h-full overflow-hidden">
+                  {/* key changes when this slide becomes active, restarting the zoom */}
+                  <div
+                    key={index === realIndex ? `zoom-desktop-${animTick}` : `static-desktop-${index}`}
+                    className="w-full h-full"
+                    style={{ animation: 'bannerZoomIn 6s ease-out forwards', transformOrigin: 'center center' }}
+                  >
+                    <Image
+                      src={banner?.desktop_image}
+                      preview={false}
+                      draggable={false}
+                      loading="lazy"
+                      wrapperStyle={{ width: '100%', height: '100%', display: 'block' }}
+                      className="!w-full !h-full pointer-events-none"
+                      style={{ WebkitTouchCallout: 'none', objectFit: 'cover', width: '100%', height: '100%' }}
+                    />
+                  </div>
                   {banner?.http_link && <Link href={banner.http_link} className="absolute inset-0 w-full h-full" />}
                 </div>
               )}
@@ -263,7 +286,7 @@ export default function BannerSwiper({ bannerData }: any) {
       </div>
 
       {/* Mobile Banner */}
-      <div className="hidden sm:block">
+      <div className="hidden sm:block h-full">
         <Swiper
           ref={mobileSwiperRef}
           navigation={
@@ -275,46 +298,47 @@ export default function BannerSwiper({ bannerData }: any) {
               : false
           }
           modules={[Navigation, Autoplay, Pagination]}
-          className="homepage-banner-swiper"
+          className="homepage-banner-swiper !h-full"
           loop={true}
           pagination={{
             clickable: true,
-            // renderBullet: function (index, className) {
-            //   return '<span class="' + className + '">' + (index + 1) + '</span>';
-            // },
           }}
           autoplay={{
             delay: 5000,
             disableOnInteraction: false,
           }}
           speed={1000}
-          onSlideChange={(swiper) => {
-            setIsVideoPlaying(true);
-            setIsBeginning(swiper.isBeginning);
-            setIsEnd(swiper.isEnd);
-          }}
+          onSlideChange={handleSlideChange}
           onAfterInit={(swiper) => {
             setIsBeginning(swiper.isBeginning);
             setIsEnd(swiper.isEnd);
           }}
         >
           {bannerData?.banner_image?.map((banner: any, index: number) => (
-            <SwiperSlide key={index} className="!aspect-[1/1] !w-full !relative">
+            <SwiperSlide key={index} className="!h-full !w-full !relative overflow-hidden">
               {!banner?.is_mobile_image ? (
                 banner?.mobile_image?.toLowerCase().includes('.mp4') && (
                   <ProtectedVideo src={banner?.mobile_image} autoPlay={isVideoPlaying} link={banner?.http_link || null} className="max-h-[700px]" />
                 )
               ) : (
-                <div className="!w-full h-full">
-                  <Image
-                    src={banner?.mobile_image}
-                    preview={false}
-                    draggable={false}
-                    loading="lazy"
-                    fallback="/images/ashclair_pdp_logo_image.svg"
-                    className="w-full h-full min-w-[100vw] object-cover pointer-events-none"
-                    style={{ WebkitTouchCallout: 'none' }}
-                  />
+                <div className="!w-full h-full overflow-hidden">
+                  {/* key changes when this slide becomes active, restarting the zoom */}
+                  <div
+                    key={index === realIndex ? `zoom-mobile-${animTick}` : `static-mobile-${index}`}
+                    className="w-full h-full"
+                    style={{ animation: 'bannerZoomIn 6s ease-out forwards', transformOrigin: 'center center' }}
+                  >
+                    <Image
+                      src={banner?.mobile_image}
+                      preview={false}
+                      draggable={false}
+                      loading="lazy"
+                      fallback="/images/ashclair_pdp_logo_image.svg"
+                      wrapperStyle={{ width: '100%', height: '100%', display: 'block' }}
+                      className="!w-full !h-full pointer-events-none"
+                      style={{ WebkitTouchCallout: 'none', objectFit: 'cover', width: '100%', height: '100%' }}
+                    />
+                  </div>
                   {banner?.http_link && <Link href={banner.http_link} className="absolute inset-0 w-full h-full" />}
                 </div>
               )}

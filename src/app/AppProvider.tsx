@@ -1,5 +1,6 @@
 'use client';
 import React, { Suspense, useEffect, useRef } from 'react';
+import { ReactLenis } from 'lenis/react';
 
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ConfigProvider } from 'antd';
@@ -54,6 +55,7 @@ const AppProviderData = ({ children, initialHeaderMegaData, initialPromoData }: 
   useYotpo(process.env.NEXT_PUBLIC_YOTPO_APP_KEY as string);
 
   return (
+    <ReactLenis root options={{ lerp: 0.1, duration: 1.2 }}>
     <Provider store={store}>
       <AntdRegistry>
         <ConfigProvider
@@ -133,6 +135,7 @@ const AppProviderData = ({ children, initialHeaderMegaData, initialPromoData }: 
         </ConfigProvider>
       </AntdRegistry>
     </Provider>
+    </ReactLenis>
   );
 };
 

@@ -83,7 +83,7 @@ export default function Drops() {
           </div>
         </div>
 
-        <div className="w-[55%] flex-shrink-0 md:w-full relative h-[80vh]">
+        <div className="w-[55%] flex-shrink-0 md:w-full relative h-[90vh]">
           <div className="relative aspect-[3/4] overflow-hidden">
             <video
               src="/videos/model.mp4"
